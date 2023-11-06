@@ -1,17 +1,17 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
-import HomePage from './HomePage'; // Import from the "components" folder
-import SalesPage from './SalesPage'; // Import from the "components" folder
-import Navigation from './Navigation'; // Import from the "components" folder
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import HomePage from './HomePage';
+import SalesPage from './SalesPage';
+import NavBar from './NavBar';
 
 function App() {
   return (
     <Router>
-      <div>
-        <Navigation />
-        <Route exact path="/" component={HomePage} /> {/* Route for Home page */}
-        <Route exact path="/SalesPage" component={SalesPage} /> {/* Route for Sales page */}
-      </div>
+      <NavBar />
+      <Routes>
+        <Route path="/HomePage" element={<HomePage />} />
+        <Route path="/SalesPage" element={<SalesPage />} />
+      </Routes>
     </Router>
   );
 }
