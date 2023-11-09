@@ -1,79 +1,56 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import './HomePage.css';
 
-const HomePage = () => {
-  // Define state variables to store selected department, store, and date
-  const [selectedDepartment, setSelectedDepartment] = useState('All');
-  const [selectedStore, setSelectedStore] = useState('All');
+function HomePage() {
+  const [data, setData] = useState(null);
+  const [selectedStore, setSelectedStore] = useState('');
+  const [selectedDepartment, setSelectedDepartment] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
 
-  // Define a function to handle the submit button click
+  useEffect(() => {
+    axios.get('http://localhost:5000/count')
+      .then(response => {
+        setData(response.data);
+        setSelectedStore(response.data.total_Store[0]);
+        setSelectedDepartment(response.data.total_Department[0]);
+      })
+      .catch(err => console.log(err));
+  }, []);
+
   const handleFilterSubmit = () => {
-    // Add your logic here to fetch and display data based on the user's selection
+    axios.post('http://localhost:5000/filter', {
+      store: selectedStore,
+      date: selectedDate,
+      department: selectedDepartment
+    })
+    .then(response => console.log(response.data))
+    .catch(err => console.log(err));
   };
 
   return (
-    <div>
+    <div className="home-page">
       <h1>Home Page</h1>
-      <h2>Data Table</h2>
-      <table>
+
+      {/* Rest of your code */}
+
+      {/* Replace hardcoded table rows with data from backend */}
+      <table className="data-table">
         <thead>
           <tr>
-            <th>Department</th>
-            <th>Total Restaurants</th>
+            <th>Total Stores</th>
+            <th>Total Departments</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>Department 1</td>
-            <td>10</td>
+            <td>{data && data.total_Store}</td>
+            <td>{data && data.total_Department}</td>
           </tr>
-          <tr>
-            <td>Department 2</td>
-            <td>15</td>
-          </tr>
-          {/* Add more rows as needed */}
         </tbody>
       </table>
 
-      <h2>Filters</h2>
-      <label>
-        Choose Department:
-        <select
-          value={selectedDepartment}
-          onChange={(e) => setSelectedDepartment(e.target.value)}
-        >
-          <option value="All">All Departments</option>
-          <option value="Department 1">Department 1</option>
-          <option value="Department 2">Department 2</option>
-          {/* Add more department options */}
-        </select>
-      </label>
-
-      <label>
-        Choose Store:
-        <select
-          value={selectedStore}
-          onChange={(e) => setSelectedStore(e.target.value)}
-        >
-          <option value="All">All Stores</option>
-          <option value="restaurant 1">restaurant 1</option>
-          <option value="restaurant 2">restaurant 2</option>
-          {/* Add more store options */}
-        </select>
-      </label>
-
-      <label>
-        Choose Date:
-        <input
-          type="date"
-          value={selectedDate}
-          onChange={(e) => setSelectedDate(e.target.value)}
-        />
-      </label>
-
-      <button onClick={handleFilterSubmit}>Submit</button>
-      
-      {/* Display whether the restaurant department is on holiday or not based on your logic */}
+      {/* Rest of your code */}
     </div>
   );
 }
